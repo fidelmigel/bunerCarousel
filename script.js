@@ -1,12 +1,14 @@
 let y = 0;
 let autoRotateInterval;
 let mouseMoveTimeout;
-const sensitivity = 0.5; // Чутливість для миші
-const touchSensitivity = 0.05; // Зменшена чутливість для сенсорного вводу
+const sensitivity = 0.5;
+const touchSensitivity = 0.05;
 
 const fusifyTag = document.querySelector("fusifytag");
 const dataItems = JSON.parse(getValue("data-items", fusifyTag.attributes));
 const autoSpeed = getValue("auto-speed", fusifyTag.attributes) || 100;
+const resetTimeout =
+  parseInt(getValue("reset-timeout", fusifyTag.attributes)) || 3000; // Отримуємо налаштовувану затримку з HTML
 
 function makeHTML() {
   const faces = [
@@ -49,7 +51,7 @@ function makeHTML() {
 }
 
 function getValue(name, attr) {
-  for (var j = 0; j < attr.length; j++) {
+  for (let j = 0; j < attr.length; j++) {
     if (attr[j].name == name) {
       return attr[j].value;
     }
@@ -187,18 +189,10 @@ function stopAutoRotate() {
   cancelAnimationFrame(autoRotateInterval);
 }
 
-// Зупиняє автообертання під час руху миші і знову запускає через 3 секунди
-function handleMouseMove(e) {
-  stopAutoRotate();
-  y += e.movementX * sensitivity;
-  updateCubeRotation();
-  resetAutoRotate();
-}
-
-// Додаємо таймаут для відновлення автообертання через 3 секунди після того, як користувач припинить рух миші
+// Налаштовуваний таймаут для відновлення автообертання після зупинки миші або сенсора
 function resetAutoRotate() {
   clearTimeout(mouseMoveTimeout);
-  mouseMoveTimeout = setTimeout(startAutoRotate, 3000);
+  mouseMoveTimeout = setTimeout(startAutoRotate, resetTimeout); // Використовуємо значення з HTML
 }
 
 // Сенсорне управління для мобільних пристроїв
@@ -216,3 +210,10 @@ function updateCubeRotation() {
 
 document.addEventListener("mousemove", handleMouseMove);
 document.addEventListener("touchmove", handleTouchMove);
+
+function handleMouseMove(e) {
+  stopAutoRotate();
+  y += e.movementX * sensitivity;
+  updateCubeRotation();
+  resetAutoRotate();
+}
