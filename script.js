@@ -8,7 +8,12 @@ const fusifyTag = document.querySelector("fusifytag");
 const dataItems = JSON.parse(getValue("data-items", fusifyTag.attributes));
 const autoSpeed = getValue("auto-speed", fusifyTag.attributes) || 100;
 const resetTimeout =
-  parseInt(getValue("reset-timeout", fusifyTag.attributes)) || 3000; // Отримуємо налаштовувану затримку з HTML
+  parseInt(getValue("reset-timeout", fusifyTag.attributes)) || 3000;
+const rotationDirection =
+  getValue("rotation-direction", fusifyTag.attributes) || "right";
+
+// Напрямок автообертання: 1 для "right" і -1 для "left"
+const autoRotationMultiplier = rotationDirection === "right" ? 1 : -1;
 
 function makeHTML() {
   const faces = [
@@ -178,7 +183,7 @@ window.onresize = function () {
 
 function startAutoRotate() {
   function rotate() {
-    y += autoSpeed / 100;
+    y += (autoSpeed / 100) * autoRotationMultiplier; // Використовуємо напрямок тільки для автообертання
     updateCubeRotation();
     autoRotateInterval = requestAnimationFrame(rotate);
   }
@@ -199,7 +204,7 @@ function resetAutoRotate() {
 function handleTouchMove(e) {
   const touch = e.touches[0];
   stopAutoRotate();
-  y += (touch.clientX - window.innerWidth / 2) * touchSensitivity;
+  y += (touch.clientX - window.innerWidth / 2) * touchSensitivity; // Без впливу напряму
   updateCubeRotation();
   resetAutoRotate();
 }
@@ -213,7 +218,7 @@ document.addEventListener("touchmove", handleTouchMove);
 
 function handleMouseMove(e) {
   stopAutoRotate();
-  y += e.movementX * sensitivity;
+  y += e.movementX * sensitivity; // Без впливу напряму
   updateCubeRotation();
   resetAutoRotate();
 }
