@@ -14,28 +14,12 @@ const rotationDirection =
 
 // Напрямок автообертання: 1 для "right" і -1 для "left"
 const autoRotationMultiplier = rotationDirection === "right" ? 1 : -1;
-//************************************
-document.addEventListener("DOMContentLoaded", function () {
-  const fusifytag = document.querySelector("fusifytag");
-  const items = JSON.parse(fusifytag.getAttribute("data-items"));
 
-  items.forEach((item, index) => {
-    const face = document.querySelector(`.face-${index + 1}`);
-    if (face && item["background-color"]) {
-      face.style.backgroundColor = item["background-color"];
-    }
-  });
-});
-
-//************************************
-function makeContentDiv(content, bgColor) {
-  return `<div ></div>`;
-}
 function makeHTML() {
   const faces = [
     {
       class: "side front",
-      content: dataItems[1]["second-face"],
+      content: dataItems[0]["first-face"],
       link: dataItems[0].link,
     },
     {
@@ -43,18 +27,24 @@ function makeHTML() {
       content: dataItems[1]["second-face"],
       link: dataItems[1].link,
       bgColor: dataItems[1]["background-color"],
+      bgSize: dataItems[1]["background-size"],
+      bgPos: dataItems[1]["background-position"],
     },
     {
       class: "side left",
       content: dataItems[2]["third-face"],
       link: dataItems[2].link,
       bgColor: dataItems[2]["background-color"],
+      bgSize: dataItems[2]["background-size"],
+      bgPos: dataItems[2]["background-position"],
     },
     {
       class: "side right",
       content: dataItems[3]["fourth-face"],
       link: dataItems[3].link,
       bgColor: dataItems[3]["background-color"],
+      bgSize: dataItems[3]["background-size"],
+      bgPos: dataItems[3]["background-position"],
     },
   ];
 
@@ -63,7 +53,11 @@ function makeHTML() {
     faces
       .map(
         (face) =>
-          `<a href="${face.link}" class="${face.class}" target="_blank" style="background-size: 50%;background-color:${face.bgColor};background-image: url(${face.content});"></a>`
+          `<a href="${face.link}" class="${face.class}" target="_blank" 
+           style="background-color: ${face.bgColor}; 
+           background-image: url(${face.content});
+           background-size: ${face.bgSize};
+           background-position: ${face.bgPos};"></a>`
       )
       .join("") +
     "</div>";
@@ -73,7 +67,7 @@ function makeHTML() {
 
 function getValue(name, attr) {
   for (let j = 0; j < attr.length; j++) {
-    if (attr[j].name == name) {
+    if (attr[j].name === name) {
       return attr[j].value;
     }
   }
@@ -110,30 +104,9 @@ function replaceCSS() {
     side.style.position = "absolute";
     side.style.backfaceVisibility = "hidden";
     side.style.backgroundRepeat = "no-repeat";
-    side.style.backgroundPosition = "center";
     side.style.textDecoration = "none";
     side.style.willChange = "transform";
   });
-
-  const videos = document.querySelectorAll("video");
-  videos.forEach((video) => {
-    video.style.width = "100%";
-    video.style.height = "100%";
-    video.style.objectFit = "cover";
-    video.style.pointerEvents = "none";
-  });
-
-  const front = document.querySelector(".front");
-  front.style.transform = "translateZ(150px)";
-
-  const back = document.querySelector(".back");
-  back.style.transform = "rotateY(180deg) translateZ(150px)";
-
-  const left = document.querySelector(".left");
-  left.style.transform = "rotateY(-90deg) translateZ(150px)";
-
-  const right = document.querySelector(".right");
-  right.style.transform = "rotateY(90deg) translateZ(150px)";
 
   setCubeSize();
 }
@@ -199,7 +172,7 @@ window.onresize = function () {
 
 function startAutoRotate() {
   function rotate() {
-    y += (autoSpeed / 100) * autoRotationMultiplier; // Використовуємо напрямок тільки для автообертання
+    y += (autoSpeed / 100) * autoRotationMultiplier;
     updateCubeRotation();
     autoRotateInterval = requestAnimationFrame(rotate);
   }
@@ -210,17 +183,15 @@ function stopAutoRotate() {
   cancelAnimationFrame(autoRotateInterval);
 }
 
-// Налаштовуваний таймаут для відновлення автообертання після зупинки миші або сенсора
 function resetAutoRotate() {
   clearTimeout(mouseMoveTimeout);
-  mouseMoveTimeout = setTimeout(startAutoRotate, resetTimeout); // Використовуємо значення з HTML
+  mouseMoveTimeout = setTimeout(startAutoRotate, resetTimeout);
 }
 
-// Сенсорне управління для мобільних пристроїв
 function handleTouchMove(e) {
   const touch = e.touches[0];
   stopAutoRotate();
-  y += (touch.clientX - window.innerWidth / 2) * touchSensitivity; // Без впливу напряму
+  y += (touch.clientX - window.innerWidth / 2) * touchSensitivity;
   updateCubeRotation();
   resetAutoRotate();
 }
@@ -234,7 +205,7 @@ document.addEventListener("touchmove", handleTouchMove);
 
 function handleMouseMove(e) {
   stopAutoRotate();
-  y += e.movementX * sensitivity; // Без впливу напряму
+  y += e.movementX * sensitivity;
   updateCubeRotation();
   resetAutoRotate();
 }
