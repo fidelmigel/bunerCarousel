@@ -14,29 +14,47 @@ const rotationDirection =
 
 // Напрямок автообертання: 1 для "right" і -1 для "left"
 const autoRotationMultiplier = rotationDirection === "right" ? 1 : -1;
+//************************************
+document.addEventListener("DOMContentLoaded", function () {
+  const fusifytag = document.querySelector("fusifytag");
+  const items = JSON.parse(fusifytag.getAttribute("data-items"));
 
+  items.forEach((item, index) => {
+    const face = document.querySelector(`.face-${index + 1}`);
+    if (face && item["background-color"]) {
+      face.style.backgroundColor = item["background-color"];
+    }
+  });
+});
+
+//************************************
+function makeContentDiv(content, bgColor) {
+  return `<div ></div>`;
+}
 function makeHTML() {
   const faces = [
     {
       class: "side front",
-      content:
-        '<video src="images/tel.mp4" muted playsinline autoplay loop></video>',
+      content: dataItems[1]["second-face"],
       link: dataItems[0].link,
     },
     {
       class: "side back",
-      content: '<img src="images/burger.png">',
+      content: dataItems[1]["second-face"],
       link: dataItems[1].link,
+      bgColor: dataItems[1]["background-color"],
     },
     {
       class: "side left",
-      content: '<img src="images/chiken.png">',
+      content: dataItems[2]["third-face"],
       link: dataItems[2].link,
+      bgColor: dataItems[2]["background-color"],
     },
     {
       class: "side right",
-      content: '<img src="images/meat.png">',
+      content: dataItems[3]["fourth-face"],
       link: dataItems[3].link,
+      bgColor: dataItems[3]["background-color"],
     },
   ];
 
@@ -45,9 +63,7 @@ function makeHTML() {
     faces
       .map(
         (face) =>
-          `<a href="${face.link}" class="${face.class}" target="_blank">
-              ${face.content}
-           </a>`
+          `<a href="${face.link}" class="${face.class}" target="_blank" style="background-size: 50%;background-color:${face.bgColor};background-image: url(${face.content});"></a>`
       )
       .join("") +
     "</div>";
@@ -93,7 +109,7 @@ function replaceCSS() {
     side.style.alignItems = "center";
     side.style.position = "absolute";
     side.style.backfaceVisibility = "hidden";
-    side.style.backgroundSize = "cover";
+    side.style.backgroundRepeat = "no-repeat";
     side.style.backgroundPosition = "center";
     side.style.textDecoration = "none";
     side.style.willChange = "transform";
