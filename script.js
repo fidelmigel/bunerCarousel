@@ -75,16 +75,46 @@ function makeHTML() {
 
 function getContent(content) {
   return content
-    .map(
-      (item) => `<img src="${item.path}" 
-            style="
-            position: absolute;
+    .map((item) => {
+      if (item.type === "image") {
+        return `<img src="${item.path}" 
+            style="position: absolute;
             top: ${item.top};
             left: ${item.left};
             width: ${item.width};
-            height: ${item.height};
-            "/>`
-    )
+            height: ${item.height};"/>`;
+      } else if (item.type === "video") {
+        return `<video src="${item.path}" 
+            style="position: absolute;
+            top: ${item.top};
+            left: ${item.left};
+            width: ${item.width};
+            height: ${item.height};" controls></video>`;
+      }
+    })
+    .join("");
+}
+function getContent(content) {
+  return content
+    .map((item) => {
+      if (item.type === "image") {
+        return `<img src="${item.path}" 
+            style="position: absolute;
+            top: ${item.top};
+            left: ${item.left};
+            width: ${item.width};
+            height: ${item.height};"/>`;
+      } else if (item.type === "video") {
+        return `<video src="${item.path}" 
+            style="position: absolute;
+            top: ${item.top};
+            left: ${item.left};
+            width: ${item.width};
+            height: ${item.height};" controls></video>`;
+      } else {
+        return ""; // Handle other types or return an empty string
+      }
+    })
     .join("");
 }
 
