@@ -12,36 +12,42 @@ const resetTimeout =
 const rotationDirection =
   getValue("rotation-direction", fusifyTag.attributes) || "right";
 
-// Напрямок автообертання: 1 для "right" і -1 для "left"
 const autoRotationMultiplier = rotationDirection === "right" ? 1 : -1;
 
 function makeHTML() {
   const faces = [
     {
       class: "side front",
-      content: dataItems[0]["first-face"],
+      content: dataItems[0]["content"],
       link: dataItems[0].link,
+      bgImage: dataItems[0]["background-image"],
+      bgColor: dataItems[0]["background-color"],
+      bgSize: dataItems[0]["background-size"],
+      bgPos: dataItems[0]["background-position"],
     },
     {
       class: "side back",
-      content: dataItems[1]["second-face"],
+      content: dataItems[1]["content"],
       link: dataItems[1].link,
+      bgImage: dataItems[1]["background-image"],
       bgColor: dataItems[1]["background-color"],
       bgSize: dataItems[1]["background-size"],
       bgPos: dataItems[1]["background-position"],
     },
     {
       class: "side left",
-      content: dataItems[2]["third-face"],
+      content: dataItems[2]["content"],
       link: dataItems[2].link,
+      bgImage: dataItems[2]["background-image"],
       bgColor: dataItems[2]["background-color"],
       bgSize: dataItems[2]["background-size"],
       bgPos: dataItems[2]["background-position"],
     },
     {
       class: "side right",
-      content: dataItems[3]["fourth-face"],
+      content: dataItems[3]["content"],
       link: dataItems[3].link,
+      bgImage: dataItems[3]["background-image"],
       bgColor: dataItems[3]["background-color"],
       bgSize: dataItems[3]["background-size"],
       bgPos: dataItems[3]["background-position"],
@@ -54,15 +60,32 @@ function makeHTML() {
       .map(
         (face) =>
           `<a href="${face.link}" class="${face.class}" target="_blank" 
-           style="background-color: ${face.bgColor}; 
-           background-image: url(${face.content});
-           background-size: ${face.bgSize};
-           background-position: ${face.bgPos};"></a>`
+               style="background-color: ${face.bgColor}; 
+               background-image: url(${face.bgImage});
+               background-size: ${face.bgSize};
+               background-position: ${face.bgPos};"><div style="
+            width: 100%;
+            height: 100%;">${getContent(face.content)}</div></a>`
       )
       .join("") +
     "</div>";
 
   fusifyTag.innerHTML = htmlContent;
+}
+
+function getContent(content) {
+  return content
+    .map(
+      (item) => `<img src="${item.path}" 
+            style="
+            position: absolute;
+            top: ${item.top};
+            left: ${item.left};
+            width: ${item.width};
+            height: ${item.height};
+            "/>`
+    )
+    .join("");
 }
 
 function getValue(name, attr) {
@@ -139,25 +162,6 @@ function setCubeSize() {
   back.style.transform = `rotateY(180deg) translateZ(${translateZ}px)`;
   left.style.transform = `rotateY(-90deg) translateZ(${translateZ}px)`;
   right.style.transform = `rotateY(90deg) translateZ(${translateZ}px)`;
-
-  scaleImages(cubeSize);
-}
-
-function scaleImages(cubeSize) {
-  const images = document.querySelectorAll(".side img");
-  const videos = document.querySelectorAll(".side video");
-
-  images.forEach((image) => {
-    image.style.width = `${cubeSize}px`;
-    image.style.height = `${cubeSize}px`;
-    image.style.objectFit = "cover";
-  });
-
-  videos.forEach((video) => {
-    video.style.width = `${cubeSize}px`;
-    video.style.height = `${cubeSize}px`;
-    video.style.objectFit = "cover";
-  });
 }
 
 window.onload = function () {
