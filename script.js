@@ -84,7 +84,7 @@ function addButtonsToFace() {
   const playPauseButtonConfig = dataItems[0]["play-pause-button"]; // Конфігурація кнопки Play-Pause.
   const soundButtonConfig = dataItems[0]["sound-button"]; // Конфігурація кнопки звуку.
 
-  // Створюємо кнопку Play-Pause.
+  /* // Створюємо кнопку Play-Pause.
   let playPauseButton = document.createElement("img");
   playPauseButton.src = playPauseButtonConfig.url; // Встановлюємо URL зображення.
   playPauseButton.style.width = playPauseButtonConfig.width; // Встановлюємо ширину кнопки.
@@ -104,7 +104,7 @@ function addButtonsToFace() {
   soundButton.style.bottom = "10px"; // Розташовуємо кнопку на відстані 10px від нижнього краю.
   soundButton.style.right = "10px"; // Встановлюємо відступ справа на 10px.
   soundButton.style.cursor = "pointer";
-  frontFace.appendChild(soundButton); // Додаємо кнопку звуку на передню грань.
+  frontFace.appendChild(soundButton); // Додаємо кнопку звуку на передню грань.*/
 }
 
 function getValue(name, attr) {
